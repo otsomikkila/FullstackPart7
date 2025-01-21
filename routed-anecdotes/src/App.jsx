@@ -4,7 +4,8 @@ import { useState } from 'react'
 import {
   BrowserRouter as Router,
   Routes, Route, Link,
-  useParams
+  useParams,
+  useNavigate
 } from 'react-router-dom'
 
 const Menu = () => {
@@ -13,9 +14,9 @@ const Menu = () => {
   }
   return (
     <div>
-      <a href='/' style={padding}>anecdotes</a>
-      <a href='/create' style={padding}>create new</a>
-      <a href='/about' style={padding}>about</a>
+      <Link to='/' style={padding}>anecdotes</Link>
+      <Link to='/create' style={padding}>create new</Link>
+      <Link to='/about' style={padding}>about</Link>
     </div>
   )
 }
@@ -75,7 +76,7 @@ const CreateNew = (props) => {
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
-
+  const navigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -85,6 +86,9 @@ const CreateNew = (props) => {
       info,
       votes: 0
     })
+    props.setNotification(`a new anecdote ${content} created!`)
+    setTimeout(() => props.setNotification(''), 5000)
+    navigate('/')
   }
 
   return (
@@ -129,10 +133,11 @@ const App = () => {
   ])
 
   const [notification, setNotification] = useState('')
-
+  console.log(anecdotes)
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000)
     setAnecdotes(anecdotes.concat(anecdote))
+    console.log(anecdotes)
   }
 
   const anecdoteById = (id) =>
@@ -153,12 +158,13 @@ const App = () => {
     <Router>
       <div>
         <h1>Software anecdotes</h1>
-        <Menu />      
+        <Menu />  
+        <p>{notification}</p>    
       </div>
 
       <Routes>
         <Route path='/' element={<AnecdoteList anecdotes={anecdotes}/>} />
-        <Route path='/create' element={<CreateNew />} />
+        <Route path='/create' element={<CreateNew addNew={addNew} setNotification={setNotification}/>} />
         <Route path='/about' element={<About />} />
         <Route path='/anecdotes/:id' element={<Anecdote anecdotes={anecdotes}/>} />
       </Routes>
