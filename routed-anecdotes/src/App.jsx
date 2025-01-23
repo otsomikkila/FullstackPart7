@@ -79,16 +79,20 @@ const CreateNew = (props) => {
   const author = useField('text')
   const info = useField('text')
 
+  //3 different cases of useField
+
+  //need a way for the reset to work without being part of the spread syntax
+
   const handleSubmit = (e) => {
     //console.log('e', e.target.value)
     e.preventDefault()
     props.addNew({
-      content: content.value,
-      author: author.value,
-      info: info.value,
+      content: content.noReset.value,
+      author: author.noReset.value,
+      info: info.noReset.value,
       votes: 0
     })
-    props.setNotification(`a new anecdote ${content.value} created!`)
+    props.setNotification(`a new anecdote ${content.noReset.value} created!`)
     setTimeout(() => props.setNotification(''), 5000)
     navigate('/')
   }
@@ -99,18 +103,19 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input {...content} />
+          <input {...content.noReset} />
         </div>
         <div>
           author
-          <input {...author} />
+          <input {...author.noReset} />
         </div>
         <div>
           url for more info
-          <input {...name} />
+          <input {...info.noReset} />
         </div>
-        <button>create</button>
+        <button type='submit'>create</button>
       </form>
+      <button onClick={() => {content.reset(), author.reset(), info.reset()}}>reset</button>
     </div>
   )
 
