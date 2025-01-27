@@ -21,7 +21,7 @@ const useCountry = (name) => {
   
   useEffect(() => {
     const fetchCountry = async () => {
-      let countryData;
+      let countryData
       try {
         countryData = await axios.get(`https://studies.cs.helsinki.fi/restcountries/api/name/${name}`)
         console.log('countryData: ', countryData)
